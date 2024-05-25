@@ -245,8 +245,8 @@ async function load(module, imports) {
 
 async function init(input) {
     if (typeof input === 'undefined') {
-        //input = import.meta.url.replace(/\.js$/, '_bg.wasm');
-        input = temp_link
+        input = import.meta.url.replace(/\.js$/, '_bg.wasm');
+        //input = temp_link
     }
     const imports = {};
     //console.log("asdfkjhask;fhasdkl;fjsadl;kfsa" + input)
