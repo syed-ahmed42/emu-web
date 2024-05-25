@@ -117,7 +117,7 @@ const Emulator = () => {
         //const romBuffer = await fetch("http://localhost:64468/mario.nes").then(res => res.arrayBuffer());
         //const romBuffer = await fetch(temp_link).then(res => res.arrayBuffer());
         //const input = import.meta.url.replace(/\.js$/, '_bg.wasm');
-        const romBuffer = await fetch("../../../public/mario.nes").then(res => res.arrayBuffer());
+        const romBuffer = await fetch("mario.nes").then(res => res.arrayBuffer());
         //const romBuffer = rom.arrayBuffer();
         init()
           .then(wasm => run(wasm, new Uint8Array(romBuffer)))

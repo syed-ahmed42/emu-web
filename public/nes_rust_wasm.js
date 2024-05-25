@@ -247,7 +247,7 @@ async function init(input) {
     if (typeof input === 'undefined') {
         //input = import.meta.url.replace(/\.js$/, '_bg.wasm');
         //input = temp_link
-        input = "public/nes_rust_wasm_bg.wasm"
+        input = "/nes_rust_wasm_bg.wasm"
     }
     const imports = {};
     //console.log("asdfkjhask;fhasdkl;fjsadl;kfsa" + input)
