@@ -4,6 +4,7 @@ import init, { WasmNes, Button } from "../../../public/nes_rust_wasm";
 
 
 const Emulator = () => {
+    const temp_link = "https://22e7363121a89b.lhr.life/mario.nes"
     const [show, setShow] = useState(true);
 
 
@@ -113,7 +114,8 @@ const Emulator = () => {
 
     const start = async (rom) => {
         setShow(false);
-        const romBuffer = await fetch("http://localhost:64468/mario.nes").then(res => res.arrayBuffer());
+        //const romBuffer = await fetch("http://localhost:64468/mario.nes").then(res => res.arrayBuffer());
+        const romBuffer = await fetch(temp_link).then(res => res.arrayBuffer());
         //const romBuffer = rom.arrayBuffer();
         init()
           .then(wasm => run(wasm, new Uint8Array(romBuffer)))
