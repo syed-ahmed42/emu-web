@@ -1,4 +1,5 @@
-let wasm_link = "http://localhost:64468/nes_rust_wasm_bg.wasm"
+const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
+let wasm_link = API_ENDPOINT + "nes_rust_wasm_bg.wasm"
 let temp_link = "https://22e7363121a89b.lhr.life/nes_rust_wasm_bg.wasm"
 
 let wasm;
@@ -246,8 +247,11 @@ async function load(module, imports) {
 async function init(input) {
     if (typeof input === 'undefined') {
         //input = import.meta.url.replace(/\.js$/, '_bg.wasm');
-        //input = temp_link
-        input = "/nes_rust_wasm_bg.wasm"
+        input = wasm_link
+        
+
+        //prod
+        //input = "/nes_rust_wasm_bg.wasm"
     }
     const imports = {};
     //console.log("asdfkjhask;fhasdkl;fjsadl;kfsa" + input)

@@ -4,8 +4,24 @@ import init, { WasmNes, Button } from "../../../public/nes_rust_wasm";
 
 
 const Emulator = () => {
-    const temp_link = "https://22e7363121a89b.lhr.life/mario.nes"
+    const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
     const [show, setShow] = useState(true);
+    const [rom, setRom] = useState("sp_gulls");
+
+
+    const handleUpload = (event) => {
+        console.log(event.target.files[0]);
+        const reader = new FileReader();
+        reader.onload = () => {
+            const rom_data = reader.result;
+            init()
+          .then(wasm => run(wasm, new Uint8Array(rom_data)))
+          .catch(error => console.error(error));
+        }
+        reader.readAsArrayBuffer(event.target.files[0]);
+        
+    }
+    
 
 
     const run = (wasm, romContentArray) => {
@@ -114,10 +130,13 @@ const Emulator = () => {
 
     const start = async (rom) => {
         setShow(false);
-        //const romBuffer = await fetch("http://localhost:64468/mario.nes").then(res => res.arrayBuffer());
+        const rom_string = rom + '.nes'
+        const romBuffer = await fetch(API_ENDPOINT + rom_string).then(res => res.arrayBuffer());
         //const romBuffer = await fetch(temp_link).then(res => res.arrayBuffer());
         //const input = import.meta.url.replace(/\.js$/, '_bg.wasm');
-        const romBuffer = await fetch("mario.nes").then(res => res.arrayBuffer());
+
+        //prod
+        //const romBuffer = await fetch("mario.nes").then(res => res.arrayBuffer());
         //const romBuffer = rom.arrayBuffer();
         init()
           .then(wasm => run(wasm, new Uint8Array(romBuffer)))
@@ -127,7 +146,20 @@ const Emulator = () => {
     return (
         <div>
             <canvas id="nesCanvas" width="256" height="240"></canvas>
-            {show && <button onClick={start}>Start</button>}
+            {show && 
+            <form>
+            <label>
+              Pick a NES rom:
+              <select value={rom} onChange={(event) => setRom(event.target.value) }>
+                <option value="sp_gulls">Space Gulls (v1.1)</option>
+                <option value="bobli">Bobl (v1.1)</option>
+                <option value="twin_d">Twin Dragons (v1.0)</option>
+              </select>
+            </label>
+            <button onClick={() => start(rom)}>Start</button>
+          </form>
+            }
+            {show && <input type="file" onChange={handleUpload}/>}
         </div>
     );
 };
