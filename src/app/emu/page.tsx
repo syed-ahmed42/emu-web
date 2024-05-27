@@ -7,6 +7,7 @@ const Emulator = () => {
     const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
     const [show, setShow] = useState(true);
     const [rom, setRom] = useState("sp_gulls");
+    let animation;
 
 
     const handleUpload = (event) => {
@@ -58,7 +59,11 @@ const Emulator = () => {
           };
 
         const stepFrame = () => {
-            requestAnimationFrame(stepFrame);
+            if (animation)
+            {
+                cancelAnimationFrame(animation)
+            }
+            animation = requestAnimationFrame(stepFrame);
             // Run emulator until screen is refreshed
             nes.step_frame();
             // Load screen pixels and render to canvas
