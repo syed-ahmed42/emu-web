@@ -30,4 +30,9 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+.display_flex{
+  display: flex;
+  flex: 1;
+}
 }

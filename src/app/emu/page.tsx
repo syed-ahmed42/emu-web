@@ -1,6 +1,8 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import init, { WasmNes, Button } from "../../../public/nes_rust_wasm";
+import {default as B} from '@mui/material/Button';
+import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 
 
 const Emulator = () => {
@@ -165,6 +167,8 @@ const Emulator = () => {
           </form>
             }
             {show && <input type="file" onChange={handleUpload}/>}
+            
+            
         </div>
     );
 };
