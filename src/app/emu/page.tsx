@@ -1,18 +1,56 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import init, { WasmNes, Button } from "../../../public/nes_rust_wasm";
 import {default as B} from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import { useSearchParams, usePathname  } from 'next/navigation';
+import { RomContext } from '../RomContext';
+
 
 
 const Emulator = () => {
     const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
-    const [show, setShow] = useState(true);
-    const [rom, setRom] = useState("sp_gulls");
+    const pathname = usePathname()
+
+    //Get Global Rom
+    const {globalRom, setGlobalRom} = useContext(RomContext);
+
+    let audio_source;
     let animation;
 
+    //Get Chosen game
+    const searchParams = useSearchParams();
+    const game_title = searchParams.get('game');
+    const my_file = searchParams.get('file')
 
-    const handleUpload = (event) => {
+    const [show, setShow] = useState(true);
+    const [rom, setRom] = useState(game_title);
+   
+
+
+    useEffect(() => {
+        if (globalRom !== null)
+        {
+            console.log("Global Rom Exists")
+            handleUpload(globalRom);
+        }
+        
+        /*if (rom)
+        {
+        start(rom)
+        };*/
+        //const url = `${pathname}?${searchParams}`
+        //console.log("Effect")
+        return () => {audio_source.close();cancelAnimationFrame(animation)}
+      }, []);
+
+      const handleUpload = (rom) => {
+        init()
+          .then(wasm => run(wasm, rom))
+          .catch(error => console.error(error));
+      }
+
+    /*const handleUpload = (event) => {
         console.log(event.target.files[0]);
         const reader = new FileReader();
         reader.onload = () => {
@@ -23,7 +61,7 @@ const Emulator = () => {
         }
         reader.readAsArrayBuffer(event.target.files[0]);
         
-    }
+    }*/
     
 
 
@@ -46,6 +84,7 @@ const Emulator = () => {
     
             const bufferLength = 4096;
             const context = new audioContext({sampleRate: 44100});
+            audio_source = context;
             const scriptProcessor = context.createScriptProcessor(bufferLength, 0, 1);
     
             scriptProcessor.onaudioprocess = e => {
@@ -61,10 +100,6 @@ const Emulator = () => {
           };
 
         const stepFrame = () => {
-            if (animation)
-            {
-                cancelAnimationFrame(animation)
-            }
             animation = requestAnimationFrame(stepFrame);
             // Run emulator until screen is refreshed
             nes.step_frame();
