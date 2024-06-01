@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Suspense } from 'react';
 import init, { WasmNes, Button } from "../../../public/nes_rust_wasm";
 import {default as B} from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
@@ -186,6 +186,7 @@ const Emulator = () => {
     }
 
     return (
+        <Suspense>
         <div>
             <canvas id="nesCanvas" width="256" height="240"></canvas>
             {show && 
@@ -205,6 +206,7 @@ const Emulator = () => {
             
             
         </div>
+        </Suspense>
     );
 };
 
