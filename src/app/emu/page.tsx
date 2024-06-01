@@ -24,7 +24,6 @@ const Emulator = () => {
     const my_file = searchParams.get('file')*/
 
     const [show, setShow] = useState(true);
-    const [rom, setRom] = useState(game_title);
    
 
 
@@ -193,20 +192,7 @@ const Emulator = () => {
     return (
         <div>
             <canvas id="nesCanvas" width="256" height="240"></canvas>
-            {show && 
-            <form>
-            <label>
-              Pick a NES rom:
-              <select value={rom} onChange={(event) => setRom(event.target.value) }>
-                <option value="sp_gulls">Space Gulls (v1.1)</option>
-                <option value="bobli">Bobl (v1.1)</option>
-                <option value="twin_d">Twin Dragons (v1.0)</option>
-              </select>
-            </label>
-            <button onClick={() => start(rom)}>Start</button>
-          </form>
-            }
-            {show && <input type="file" onChange={handleUpload}/>}
+            
             
             
         </div>
