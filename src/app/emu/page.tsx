@@ -3,14 +3,14 @@ import React, { useState, useEffect, useContext, Suspense } from 'react';
 import init, { WasmNes, Button } from "../../../public/nes_rust_wasm";
 import {default as B} from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
-import { useSearchParams, usePathname  } from 'next/navigation';
+//import { useSearchParams, usePathname  } from 'next/navigation';
 import { RomContext } from '../RomContext';
 
 
 
 const Emulator = () => {
     const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
-    const pathname = usePathname()
+    //const pathname = usePathname()
 
     //Get Global Rom
     const {globalRom, setGlobalRom} = useContext(RomContext);
@@ -19,9 +19,9 @@ const Emulator = () => {
     let animation;
 
     //Get Chosen game
-    const searchParams = useSearchParams();
+    /*const searchParams = useSearchParams();
     const game_title = searchParams.get('game');
-    const my_file = searchParams.get('file')
+    const my_file = searchParams.get('file')*/
 
     const [show, setShow] = useState(true);
     const [rom, setRom] = useState(game_title);
@@ -29,9 +29,9 @@ const Emulator = () => {
 
 
     useEffect(() => {
-        if (globalRom !== null)
+        if (globalRom)
         {
-            console.log("Global Rom Exists")
+            //console.log("Global Rom Exists")
             handleUpload(globalRom);
         }
         
@@ -41,7 +41,12 @@ const Emulator = () => {
         };*/
         //const url = `${pathname}?${searchParams}`
         //console.log("Effect")
-        return () => {audio_source.close();cancelAnimationFrame(animation)}
+        return () => {
+            if (audio_source)
+            {
+                audio_source.close();cancelAnimationFrame(animation)
+            }
+        }
       }, []);
 
       const handleUpload = (rom) => {
@@ -186,7 +191,6 @@ const Emulator = () => {
     }
 
     return (
-        <Suspense>
         <div>
             <canvas id="nesCanvas" width="256" height="240"></canvas>
             {show && 
@@ -206,7 +210,6 @@ const Emulator = () => {
             
             
         </div>
-        </Suspense>
     );
 };
 

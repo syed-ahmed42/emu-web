@@ -28,6 +28,7 @@ const classes = {
 export default function Home() {
   const router = useRouter();
   const {globalRom, setGlobalRom} = useContext(RomContext);
+  const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
 
   const handleUpload = (event) => {
   const file = event.target.files[0];
@@ -39,9 +40,33 @@ export default function Home() {
       router.push(`/emu`)
 
   }
-  reader.readAsArrayBuffer(file);
-  
 }
+
+  const startGame = async (rom) => {
+    if (!gameInLibrary(rom)) throw new Error("Game not found in library.")
+    const rom_string = rom + '.nes'
+    const romBuffer = await fetch(API_ENDPOINT + rom_string).then(res => res.arrayBuffer());
+    const romBuffer8t = new Uint8Array(romBuffer)
+    setGlobalRom(romBuffer8t);
+    router.push(`/emu`)
+  }
+
+  const gameInLibrary = (title) => {
+    const games = {
+      'sp_gulls': 0,
+      'bobli': 1,
+      'twin_d': 2,
+    };
+    for (const [key, value] of Object.entries(games)) {
+      if (key.localeCompare(title) === 0)
+      {
+          return true;
+      }
+    }
+    return false;
+  }
+  
+
 
 
   return (
@@ -50,11 +75,7 @@ export default function Home() {
     <Grid container spacing={0} direction={"column"} sx={[classes.root_container, classes.flex_display]}>
     <Box component="section" sx={classes.root_box}>
       <Grid container spacing={0} sx={{display: "flex"}}>
-        <Link href={{
-          pathname: '/emu',
-          query: { game: 'sp_gulls' }
-        }} style={classes.flex_display}>
-        <Card sx={{ flex: 1 }}>
+        <Card onClick={() => startGame('sp_gulls')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -69,13 +90,9 @@ export default function Home() {
         </CardContent>
       </CardActionArea>
     </Card>
-    </Link>
         
-    <Link href={{
-          pathname: '/emu',
-          query: { game: 'bobli' }
-        }} style={classes.flex_display}>
-    <Card sx={{ flex: 1 }}>
+    
+    <Card onClick={() => startGame('bobli')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -90,13 +107,9 @@ export default function Home() {
         </CardContent>
       </CardActionArea>
     </Card>
-    </Link>
+    
         
-    <Link href={{
-          pathname: '/emu',
-          query: { game: 'twin_d' }
-        }} style={classes.flex_display}>
-    <Card sx={{ flex: 1 }}>
+    <Card onClick={() => startGame('twin_d')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -112,7 +125,6 @@ export default function Home() {
         </CardContent>
       </CardActionArea>
     </Card>
-    </Link>
       </Grid>
     </Box>
     <Box component="section" sx={classes.root_box}>
