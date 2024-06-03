@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect, useContext } from 'react';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import Image from "next/image";
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Box from '@mui/material/Box';
@@ -16,6 +17,7 @@ import { RomContext } from './RomContext';
 
 
 
+
 //create our styles
 const classes = {
   root_box: { p: 2, border: '1px dashed grey' },
@@ -25,129 +27,62 @@ const classes = {
 
 
 
-export default function Home() {
-  const router = useRouter();
-  const {globalRom, setGlobalRom} = useContext(RomContext);
-  const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
-
-  const handleUpload = (event) => {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-  reader.onload = () => {
-      const rom_data = reader.result;
-      const rom_arr = new Uint8Array(rom_data);
-      setGlobalRom(rom_arr);
-      router.push(`/emu`)
-
-  }
-}
-
-  const startGame = async (rom) => {
-    if (!gameInLibrary(rom)) throw new Error("Game not found in library.")
-    const rom_string = rom + '.nes'
-    const romBuffer = await fetch(API_ENDPOINT + rom_string).then(res => res.arrayBuffer());
-    const romBuffer8t = new Uint8Array(romBuffer)
-    setGlobalRom(romBuffer8t);
-    router.push(`/emu`)
-  }
-
-  const gameInLibrary = (title) => {
-    const games = {
-      'sp_gulls': 0,
-      'bobli': 1,
-      'twin_d': 2,
-    };
-    for (const [key, value] of Object.entries(games)) {
-      if (key.localeCompare(title) === 0)
-      {
-          return true;
-      }
-    }
-    return false;
-  }
-  
-
+export default function Gamer() {
+    const classes = {
+        root_box: { p: 2, border: '1px dashed grey' },
+        root_container: {p: 2, border: '3px dashed red' },
+        flex_display: {display: 'flex', flex: 1},
+        flex_dcc: {display: 'flex', justifyContent: 'center', alignItems: 'center'}
+      };
+    
 
 
   return (
     <div style={classes.flex_display}>
-    <Container maxWidth="sm" sx={classes.flex_display}>
-    <Grid container spacing={0} direction={"column"} sx={[classes.root_container, classes.flex_display]}>
-    <Box component="section" sx={classes.root_box}>
-      <Grid container spacing={0} sx={{display: "flex"}}>
-        <Card onClick={() => startGame('sp_gulls')} sx={{ flex: 1 }}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          image="wallpaper.jpeg"
-          alt="green iguana"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="div">
-            Lizard
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-        
-    
-    <Card onClick={() => startGame('bobli')} sx={{ flex: 1 }}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          image="wallpaper.jpeg"
-          alt="green iguana"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="div">
-            Lizard
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
-    
-        
-    <Card onClick={() => startGame('twin_d')} sx={{ flex: 1 }}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          image="wallpaper.jpeg"
-          alt="green iguana"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h6" component="div">
-            Lizard
-          </Typography>
-      
-        </CardContent>
-      </CardActionArea>
-    </Card>
-      </Grid>
-    </Box>
-    <Box component="section" sx={classes.root_box}>
-    <Typography gutterBottom variant="h6" component="div">
-            OR
-          </Typography>
-    </Box>
-    <Box component="section" sx={classes.root_box}>
-    <B variant="contained" component="label">
-      Upload Game
-      <input
-    type="file"
-    onChange={handleUpload}
-    hidden
-  />
-    </B>
-    <Typography gutterBottom component="div">
-            Currently accept only .nes files (NTSC Preferred)
-          </Typography>
-    </Box>
+  <Container maxWidth="xl" sx={[classes.flex_display, {overflow: 'hidden'}]}>
+  <Grid container spacing={0} direction={"column"} sx={[classes.root_container, classes.flex_display, {backgroundImage: "url('bg.jpeg')",
+        backgroundRepeat: "no-repeat",
+        }]}>
   
+  <Box component="section" sx={[classes.root_box]}>
+  <Typography gutterBottom variant="h6" align='center' component="div" style={{fontSize: '50px'}}>
+          Play NES games on your device
+        </Typography>
+  </Box>
+  
+
+  
+  <Box component="section" sx={[classes.root_box, {minHeight: '400px'}, classes.flex_dcc]}>
+  
+    <Link href='/select'><B component='label' variant="contained" startIcon={<PlayArrowIcon/>} style={{width: '200px', height: '50px', textTransform: 'none', fontSize: '20px'}}>
+    Play now</B></Link>
+  
+  </Box>
+ 
+
+
+  
+  <Box component='section' sx={[classes.root_box, {display: 'flex', flexDirection: 'column', flex: 1}]}>
+  <Box
+  component="img"
+  style={{
+    maxWidth: '100%',
+  }}
+  alt="The house from the offer."
+  src="dt_bar.svg"
+/>
+<video autoPlay muted loop>
+  <source src="finalClip.mp4" type="video/mp4"/>
+  Your browser does not support the video tag.
+</video>
+
+  </Box>
+  
+  
+  
+
 </Grid>
 </Container>
-    </div>
-  );
+</div>
+);
 }

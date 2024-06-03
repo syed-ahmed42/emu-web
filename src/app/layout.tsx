@@ -22,7 +22,7 @@ export default function RootLayout({
   const [globalRom, setGlobalRom] = useState(null)
   const value = { globalRom, setGlobalRom };
   return (
-    <html lang="en" style={{height: "100%", display: 'flex'}}>
+    <html lang="en" style={{display: 'flex'}}>
       <body className={`${inter.className} display_flex`}>
         <AppRouterCacheProvider>
           <RomContext.Provider value={value}>
