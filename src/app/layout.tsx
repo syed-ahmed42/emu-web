@@ -5,6 +5,8 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import "./globals.css";
 import { useState } from "react";
 import { RomContext } from "./RomContext";
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { myTheme } from "./ThemeOptions";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,11 +24,15 @@ export default function RootLayout({
   const [globalRom, setGlobalRom] = useState(null)
   const value = { globalRom, setGlobalRom };
   return (
-    <html lang="en" style={{display: 'flex'}}>
-      <body className={`${inter.className} display_flex`}>
+    <html lang="en" style={{display: 'flex', height: '100%', flexWrap: 'wrap', backgroundColor: 'black'}}>
+      <body className={`${inter.className} display_flex`} style={{height: '100%', flexWrap: 'wrap', justifyContent: 'center'}}>
         <AppRouterCacheProvider>
           <RomContext.Provider value={value}>
+          <ThemeProvider theme={myTheme}>
+          <CssBaseline>
           {children}
+          </CssBaseline>
+          </ThemeProvider>
           </RomContext.Provider>
         </AppRouterCacheProvider></body>
     </html>

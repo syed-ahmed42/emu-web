@@ -45,14 +45,14 @@ export default function Gamer() {
         }]}>
   
   <Box component="section" sx={[classes.root_box]}>
-  <Typography gutterBottom variant="h6" align='center' component="div" style={{fontSize: '50px'}}>
-          Play NES games on your device
+  <Typography  gutterBottom variant="h6" align='center' component="div" sx={{fontWeight: 'regular', fontSize: 'h2.fontSize'}}>
+          Play retro games on your device
         </Typography>
   </Box>
   
 
   
-  <Box component="section" sx={[classes.root_box, {minHeight: '400px'}, classes.flex_dcc]}>
+  <Box component="section" sx={[classes.root_box, {}, classes.flex_dcc]}>
   
     <Link href='/select'><B component='label' variant="contained" startIcon={<PlayArrowIcon/>} style={{width: '200px', height: '50px', textTransform: 'none', fontSize: '20px'}}>
     Play now</B></Link>

@@ -5,13 +5,30 @@ import {default as B} from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
 //import { useSearchParams, usePathname  } from 'next/navigation';
 import { RomContext } from '../RomContext';
+import { AppBar } from '@mui/material';
+import Toolbar from '@mui/material/Toolbar';
+import FitScreenIcon from '@mui/icons-material/FitScreen';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import IconButton from '@mui/material/IconButton';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link'
+import ControlsModal from '../ControlsModal';
+
+//<B color='error' >Controls</B>
+const classes = {
+    full: {width: '100%', height: '100%'},
+    default: {height: '100%', width: 'auto'}
+}
 
 
 
 const Emulator = () => {
     const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
     //const pathname = usePathname()
+    const styleWidth = 256 * 4;
+    const styleHeight = 256 * 4
 
+    const [screen, setScreen] = useState('default')
     //Get Global Rom
     const {globalRom, setGlobalRom} = useContext(RomContext);
 
@@ -54,6 +71,18 @@ const Emulator = () => {
           .catch(error => console.error(error));
       }
 
+      const changeScreen = () => {
+        if (screen === 'default')
+        {
+            setScreen('full')
+        }
+        else 
+        {
+            setScreen('default')
+        }
+      }
+
+
     /*const handleUpload = (event) => {
         console.log(event.target.files[0]);
         const reader = new FileReader();
@@ -70,8 +99,8 @@ const Emulator = () => {
 
 
     const run = (wasm, romContentArray) => {
-        const width = 256;
-        const height = 240;
+        const height = 240
+        const width = 256; 
         const canvas = document.getElementById('nesCanvas');
         const ctx = canvas.getContext('2d');
         const imageData = ctx.createImageData(width, height);
@@ -189,13 +218,47 @@ const Emulator = () => {
           .catch(error => console.error(error));
     }
 
+    
+
+    
+
     return (
-        <div>
-            <canvas id="nesCanvas" width="256" height="240"></canvas>
-            
-            
-            
+        <div style={classes[screen]} onMouseMove={() => {console.log("Gamer moment")}}>
+            <canvas id="nesCanvas" width='256' height='240' style={classes[screen]}></canvas>
+       
+            <AppBar position='absolute' sx={{bgcolor: 'black'}}>
+                <Toolbar variant='regular'>
+
+                    <Link href="/select">
+                <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+          >
+            <ArrowBackIcon/>
+          </IconButton>
+          </Link>
+
+          
+          <ControlsModal></ControlsModal>
+          <IconButton
+            size="large"
+            edge="end"
+            color="inherit"
+            aria-label="menu"
+            onClick={changeScreen}
+          >
+            <FitScreenIcon/>
+          </IconButton >
+
+          
+
+                </Toolbar>
+            </AppBar>
         </div>
+        
     );
 };
 
