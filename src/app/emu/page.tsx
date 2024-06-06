@@ -16,8 +16,8 @@ import ControlsModal from '../ControlsModal';
 
 //<B color='error' >Controls</B>
 const classes = {
-    full: {width: '100%', height: '100%'},
-    default: {height: '100%', width: 'auto'}
+    full: {width: '100%', height: '100vh'},
+    default: {height: '100vh', width: 'auto'}
 }
 
 

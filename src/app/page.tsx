@@ -20,8 +20,8 @@ import { RomContext } from './RomContext';
 
 //create our styles
 const classes = {
-  root_box: { p: 2, border: '1px dashed grey' },
-  root_container: {p: 2, border: '3px dashed red' },
+  root_box: { /*p: 2, border: '1px dashed grey'*/ },
+  root_container: {/*p: 2, border: '3px dashed red'*/ },
   flex_display: {display: 'flex', flex: 1}
 };
 
@@ -29,8 +29,8 @@ const classes = {
 
 export default function Gamer() {
     const classes = {
-        root_box: { p: 2, border: '1px dashed grey' },
-        root_container: {p: 2, border: '3px dashed red' },
+        root_box: { /*p: 2, border: '1px dashed grey'*/ },
+        root_container: {/*p: 2, border: '3px dashed red'*/ },
         flex_display: {display: 'flex', flex: 1},
         flex_dcc: {display: 'flex', justifyContent: 'center', alignItems: 'center'}
       };
@@ -40,19 +40,21 @@ export default function Gamer() {
   return (
     <div style={classes.flex_display}>
   <Container maxWidth="xl" sx={[classes.flex_display, {overflow: 'hidden'}]}>
-  <Grid container spacing={0} direction={"column"} sx={[classes.root_container, classes.flex_display, {backgroundImage: "url('bg.jpeg')",
+  <Grid container spacing={0} direction={"column"} sx={[classes.root_container, classes.flex_display, {
         backgroundRepeat: "no-repeat",
+        backgroundSize: 'cover',
+        background: "radial-gradient(circle at center, transparent 0%, black 60%), url('bitmap.svg')",
         }]}>
   
   <Box component="section" sx={[classes.root_box]}>
-  <Typography  gutterBottom variant="h6" align='center' component="div" sx={{fontWeight: 'regular', fontSize: 'h2.fontSize'}}>
+  <Typography  gutterBottom variant="h6" align='center' component="div" sx={{fontWeight: 'regular', fontSize: 'h3.fontSize'}}>
           Play retro games on your device
         </Typography>
   </Box>
   
 
   
-  <Box component="section" sx={[classes.root_box, {}, classes.flex_dcc]}>
+  <Box component="section" sx={[classes.root_box, {height: '250px'}, classes.flex_dcc]}>
   
     <Link href='/select'><B component='label' variant="contained" startIcon={<PlayArrowIcon/>} style={{width: '200px', height: '50px', textTransform: 'none', fontSize: '20px'}}>
     Play now</B></Link>

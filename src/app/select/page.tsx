@@ -18,9 +18,10 @@ import { RomContext } from '../RomContext';
 
 //create our styles
 const classes = {
-  root_box: { p: 2, border: '1px dashed grey' },
-  root_container: {p: 2, border: '3px dashed red' },
-  flex_display: {display: 'flex', flex: 1}
+  root_box: { /*p: 2, border: '1px dashed grey'*/ },
+  root_container: {/*p: 2, border: '3px dashed red' */},
+  flex_display: {display: 'flex', flex: 1},
+  select_styles: {flexDirection: 'column'},
 };
 
 
@@ -74,20 +75,25 @@ export default function Home() {
   return (
     <div style={classes.flex_display}>
     <Container maxWidth="sm" sx={classes.flex_display}>
-    <Grid container spacing={0} direction={"column"} sx={[classes.root_container, classes.flex_display]}>
+    <Grid container spacing={0} direction={"column"} justifyContent="center" alignItems='center' sx={[classes.root_container, classes.flex_display]}>
     <Box component="section" sx={classes.root_box}>
+    <Typography gutterBottom variant="h6" component="div">
+            Select a game
+          </Typography>
+    </Box>
+    <Box component="section" sx={[classes.root_box]}>
       <Grid container spacing={0} sx={{display: "flex"}}>
         <Card onClick={() => startGame('sp_gulls')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
           height="140"
-          image="wallpaper.jpeg"
-          alt="green iguana"
+          image="sp_gif.gif"
+          alt="Space Gulls Gameplay Gif"
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
-            Lizard
+            Space Gulls
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -99,12 +105,12 @@ export default function Home() {
         <CardMedia
           component="img"
           height="140"
-          image="wallpaper.jpeg"
-          alt="green iguana"
+          image="bobli_gif.gif"
+          alt="Bobl Gameplay Gif"
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
-            Lizard
+            Bobl
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -116,12 +122,12 @@ export default function Home() {
         <CardMedia
           component="img"
           height="140"
-          image="wallpaper.jpeg"
-          alt="green iguana"
+          image="twin_gif.gif"
+          alt="Twin Dragons Gameplay Gif"
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
-            Lizard
+            Twin Dragons
           </Typography>
       
         </CardContent>

@@ -24,8 +24,8 @@ export default function RootLayout({
   const [globalRom, setGlobalRom] = useState(null)
   const value = { globalRom, setGlobalRom };
   return (
-    <html lang="en" style={{display: 'flex', height: '100%', flexWrap: 'wrap', backgroundColor: 'black'}}>
-      <body className={`${inter.className} display_flex`} style={{height: '100%', flexWrap: 'wrap', justifyContent: 'center'}}>
+    <html lang="en" style={{height: '100%', display: 'flex', flexWrap: 'wrap', backgroundColor: 'black'}}>
+      <body className={`${inter.className} display_flex`} style={{flexWrap: 'wrap', justifyContent: 'center'}}>
         <AppRouterCacheProvider>
           <RomContext.Provider value={value}>
           <ThemeProvider theme={myTheme}>

@@ -10,7 +10,7 @@ export const themeOptions: ThemeOptions = {
       main: '#a320bf',
     },
     background: {
-        default: '#000000'
+        default: 'black'
     },
   },
   typography: {
