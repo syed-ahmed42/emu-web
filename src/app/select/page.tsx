@@ -34,6 +34,7 @@ export default function Home() {
   const handleUpload = (event) => {
   console.log("Handle upload is runnign")
   const file = event.target.files[0];
+  const file_name = file.name;
   const reader = new FileReader();
   reader.onload = () => {
       const rom_data = reader.result;
@@ -42,7 +43,16 @@ export default function Home() {
       router.push(`/emu`)
 
   }
-  reader.readAsArrayBuffer(event.target.files[0])
+
+  if (file_name.endsWith('.nes'))
+  {
+    reader.readAsArrayBuffer(event.target.files[0]);
+  }
+  else if (file_name.endsWith('.sfc') || file_name.endsWith('.smc'))
+  {
+    setGlobalRom(file);
+    router.push(`/snes`)
+  }
 }
 
   const startGame = async (rom) => {
