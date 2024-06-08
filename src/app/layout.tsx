@@ -7,6 +7,7 @@ import { useState } from "react";
 import { RomContext } from "./RomContext";
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { myTheme } from "./ThemeOptions";
+import { Analytics } from "@vercel/analytics/react"
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,10 +32,13 @@ export default function RootLayout({
           <ThemeProvider theme={myTheme}>
           <CssBaseline>
           {children}
+          
           </CssBaseline>
           </ThemeProvider>
           </RomContext.Provider>
-        </AppRouterCacheProvider></body>
+        </AppRouterCacheProvider>
+        <Analytics />
+        </body>
     </html>
   );
 }

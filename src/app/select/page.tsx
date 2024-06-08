@@ -18,8 +18,8 @@ import { RomContext } from '../RomContext';
 
 //create our styles
 const classes = {
-  root_box: { /*p: 2, border: '1px dashed grey'*/ },
-  root_container: {/*p: 2, border: '3px dashed red' */},
+  root_box: { p: 2, border: '1px dashed grey' },
+  root_container: {p: 2, border: '3px dashed red'},
   flex_display: {display: 'flex', flex: 1},
   select_styles: {flexDirection: 'column'},
 };
