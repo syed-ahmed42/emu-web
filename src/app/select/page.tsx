@@ -257,7 +257,7 @@ const libraryGameStart = async (id) => {
     <Box component="section" sx={[classes.root_box]}>
       <Grid container spacing={0} sx={{display: "flex"}}>
 {myGames?.map((myGame) => (
-        <Grid xs='auto'>
+        <Grid key={myGame.id} xs='auto'>
         <Card sx={{ flex: 1, position: 'relative' }}>
         <IconButton
             size="large"
@@ -320,15 +320,7 @@ const libraryGameStart = async (id) => {
   
 </Grid>
 </Container>
-    <button onClick={addGame}>Add game</button>
-    <button onClick={deleteGame}>Remove All</button>
-    <ul>
-      {myGames?.map((myGame) => (
-        <li key={myGame.id} onClick={() => libraryGameStart(myGame.id)}>
-          {myGame.name}
-        </li>
-      ))}
-    </ul>
+    
     </div>
   );
 }
