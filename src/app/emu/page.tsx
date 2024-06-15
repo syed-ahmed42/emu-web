@@ -14,6 +14,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link'
 import ControlsModal from '../ControlsModal';
 
+import {db} from '../db'
+
 //<B color='error' >Controls</B>
 const classes = {
     full: {width: '100%', height: '100vh'},

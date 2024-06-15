@@ -13,6 +13,11 @@ import {default as B} from '@mui/material/Button';
 import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 import { RomContext } from '../RomContext';
+import { useLiveQuery } from "dexie-react-hooks";
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+
+import {db} from '../db'
 
 
 
@@ -24,10 +29,42 @@ const classes = {
   select_styles: {flexDirection: 'column'},
 };
 
+async function addGame(event) {
+  try {
+    const file = event.target.files[0];
+
+    // Add the new friend!
+    const id = await db.games.add({
+      file: file,
+      name: 'twin_d',
+      save: 'mySave'
+    });
+    console.log("This is the game id: " + id)
+    
+  } catch (error) {
+    console.log("OOPS! Something went wrong while trying to create a game entry");
+  }
+}
+
+
+async function deleteGame(id) {
+  try {
+    // Add the new friend!
+    await db.games.delete(id);
+
+    
+  } catch (error) {
+    console.log("OOPS! Something went wrong while trying to delete a game entry");
+  }
+}
+
+
+
 
 
 export default function Home() {
   const router = useRouter();
+  const myGames = useLiveQuery(() => db.games.toArray());
   const {globalRom, setGlobalRom} = useContext(RomContext);
   const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
 
@@ -54,6 +91,15 @@ export default function Home() {
     router.push(`/snes`)
   }
 }
+
+const libraryGameStart = async (id) => {
+  //console.log("Start the game!!!")
+  const gameObj = await db.games.get(id);
+  setGlobalRom(gameObj);
+  router.push('/snes')
+  
+}
+
 
   const startGame = async (rom) => {
     if (!gameInLibrary(rom)) throw new Error("Game not found in library.")
@@ -145,6 +191,112 @@ export default function Home() {
     </Card>
       </Grid>
     </Box>
+
+
+
+
+
+
+    <Box component="section" sx={[classes.root_box]}>
+      <Grid container spacing={0} sx={{display: "flex"}}>
+        <Card onClick={() => startGame('sp_gulls')} sx={{ flex: 1 }}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="140"
+          image="sp_gif.gif"
+          alt="Space Gulls Gameplay Gif"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h6" component="div">
+            Neko
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+        
+    
+    <Card onClick={() => startGame('bobli')} sx={{ flex: 1 }}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="140"
+          image="bobli_gif.gif"
+          alt="Bobl Gameplay Gif"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h6" component="div">
+            Nekotako
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+    
+        
+    <Card onClick={() => startGame('twin_d')} sx={{ flex: 1 }}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="140"
+          image="twin_gif.gif"
+          alt="Twin Dragons Gameplay Gif"
+        />
+        <CardContent>
+          <Typography gutterBottom variant="h6" component="div">
+            Twin Dragons
+          </Typography>
+      
+        </CardContent>
+      </CardActionArea>
+    </Card>
+      </Grid>
+    </Box>
+
+
+
+    <Box component="section" sx={[classes.root_box]}>
+      <Grid container spacing={0} sx={{display: "flex"}}>
+{myGames?.map((myGame) => (
+        <Grid xs='auto'>
+        <Card sx={{ flex: 1, position: 'relative' }}>
+        <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ position: 'absolute',
+              top: '0',
+              right: '0',
+              zIndex: '1',
+               }}
+               onClick={() => deleteGame(myGame.id)}
+          >
+            <CloseIcon/>
+          </IconButton>
+        <CardActionArea onClick={() => libraryGameStart(myGame.id)}>
+         
+          <CardMedia
+        sx={{ height: 140 }}
+        image="/twin_gif.gif"
+        title="green iguana"
+      />
+          <CardContent>
+            <Typography gutterBottom variant="h6" component="div">
+              Twin Dragons
+            </Typography>
+        
+          </CardContent>
+        </CardActionArea>
+      </Card>
+      </Grid>
+      ))}
+</Grid>
+    </Box>
+
+
+
+
+
     <Box component="section" sx={classes.root_box}>
     <Typography gutterBottom variant="h6" component="div">
             OR
@@ -155,7 +307,8 @@ export default function Home() {
       Upload Game
       <input
     type="file"
-    onChange={handleUpload}
+    /*onChange={handleUpload}*/
+    onChange={addGame}
     hidden
   />
     </B>
@@ -167,7 +320,15 @@ export default function Home() {
   
 </Grid>
 </Container>
-
+    <button onClick={addGame}>Add game</button>
+    <button onClick={deleteGame}>Remove All</button>
+    <ul>
+      {myGames?.map((myGame) => (
+        <li key={myGame.id} onClick={() => libraryGameStart(myGame.id)}>
+          {myGame.name}
+        </li>
+      ))}
+    </ul>
     </div>
   );
 }
