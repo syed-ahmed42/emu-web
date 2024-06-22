@@ -32,12 +32,26 @@ const classes = {
 async function addGame(event) {
   try {
     const file = event.target.files[0];
+    const file_type = file.name.slice(-3);
+    let type;
+    if (file_type.localeCompare('nes'))
+    {
+      type = 'nes'
+    }
+    else if (file_type.localeCompare('sfc') || file_type.localeCompare('smc'))
+    {
+      type = 'snes'
+    }
+    else{
+      throw new Error("Invalid file type");
+    }
 
     // Add the new friend!
     const id = await db.games.add({
       file: file,
-      name: 'twin_d',
-      save: 'mySave'
+      name: file.name,
+      save: null,
+      type: type
     });
     console.log("This is the game id: " + id)
     
@@ -95,9 +109,10 @@ export default function Home() {
 const libraryGameStart = async (id) => {
   //console.log("Start the game!!!")
   const gameObj = await db.games.get(id);
-  console.log(gameObj.file)
+  let route = (gameObj.type.localeCompare('nes')) ? '/emu' : '/snes'
+  route += `?g=${gameObj.id}`
   setGlobalRom(gameObj);
-  router.push('/snes')
+  router.push(route);
   
 }
 
@@ -132,13 +147,13 @@ const libraryGameStartNES = async (event) => {
       myRoute = '/emu'
     }
     const rom_string = rom + ext
-    const romBlob = await fetch(API_ENDPOINT + rom_string).then(res => res.blob());
-    const romFile = new File([romBlob], rom_string)
-    console.log(romFile)
+    //const romBlob = await fetch(API_ENDPOINT + rom_string).then(res => res.blob());
+    //const romFile = new File([romBlob], rom_string)
+    //console.log(romFile)
     
     const dummyGameObj = {
       id: gameId,
-      file: romFile,
+      file: {name: rom_string},
       name: 'dummyName',
       save: 'dummyState',
       defaultGame: true
@@ -357,7 +372,6 @@ const libraryGameStartNES = async (event) => {
   
 </Grid>
 </Container>
-    <input type='file' onChange={libraryGameStartNES}/>
     </div>
   );
 }

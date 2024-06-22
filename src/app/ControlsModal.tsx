@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import SvgIcon from '@mui/material/SvgIcon';
 import KeyBoardIcons from './components/KeyBoardIcons';
+import "./styles/kbd.css"
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -43,24 +44,24 @@ export default function ControlsModal() {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
+            <Typography id="transition-modal-title" variant="h6" component="h2" align='center'>
               Controls
             </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2, display: 'flex' }}>
-                <KeyBoardIcons iconName={`keyboard_arrow_up`} fontSize={fontSize}/>
-                <KeyBoardIcons iconName={`keyboard_arrow_down`} fontSize={fontSize}/>
-                <KeyBoardIcons iconName={`keyboard_arrow_left`} fontSize={fontSize}/>
-                <KeyBoardIcons iconName={`keyboard_arrow_right`} fontSize={fontSize}/>
+            <Typography id="transition-modal-description" sx={{ mt: 2, display: 'flex', justifyContent: 'center', gap: '10px' }}>
+            <kbd >up</kbd> 
+            <kbd>down</kbd> 
+            <kbd>left</kbd> 
+            <kbd>right</kbd> 
             </Typography>
-            <Typography id="transition-modal-description" sx={{ display: 'flex'  }}>
-                <KeyBoardIcons iconName={`keyboard_a`} fontSize={fontSize}/>
-                <KeyBoardIcons iconName={`keyboard_s`} fontSize={fontSize}/>
-                <KeyBoardIcons iconName={`keyboard_z`} fontSize={fontSize}/>
-                <KeyBoardIcons iconName={`keyboard_x`} fontSize={fontSize}/>
+            <Typography id="transition-modal-description" sx={{ mt: 2, display: 'flex', justifyContent: 'center', gap: '10px'   }}>
+            <kbd>a</kbd>
+            <kbd>s</kbd>
+            <kbd>z</kbd>
+            <kbd>x</kbd>
             </Typography>
-            <Typography id="transition-modal-description" sx={{ display: 'flex'  }}>
-                <KeyBoardIcons iconName={`keyboard_return`} fontSize={fontSize}/>
-                <KeyBoardIcons iconName={`keyboard_shift`} fontSize={fontSize}/>
+            <Typography id="transition-modal-description" sx={{ mt: 2, display: 'flex', justifyContent: 'center', gap: '10px'   }}>
+            <kbd>enter</kbd>
+            <kbd>shift</kbd>
             </Typography>
           </Box>
         </Fade>

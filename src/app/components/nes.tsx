@@ -230,7 +230,7 @@ export default function Regular ({globalRom}) {
             
             <canvas id="snesCanvas" width='256' height='240' style={classes['default']}></canvas>
             
-            <ControlBar handleSave={handleSave} handleLoad={handleLoad} globalRom={globalRomState} /> : <p>Loading...</p>
+            <ControlBar handleSave={handleSave} handleLoad={handleLoad} globalRom={globalRomState} />
 
         </div>
         </>

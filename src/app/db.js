@@ -9,12 +9,12 @@ db.version(1).stores({
 db.on("populate", function() {
     // Init your DB with some default statuses:
     //Default NES games
-    db.defaultGames.add({file: {name: 'sp_gulls.nes'}, name: "sp_gulls", save: 'saveState', defaultGame: true, type: 'nes'});
-    db.defaultGames.add({file: {name: 'bobli.nes'}, name: "bobli", save: 'saveState', defaultGame: true, type: 'nes'});
-    db.defaultGames.add({file: {name: 'twin_d.nes'}, name: "twin_d", save: 'saveState', defaultGame: true, type: 'nes'});
+    db.defaultGames.add({file: {name: 'sp_gulls.nes'}, name: "sp_gulls", save: null, defaultGame: true, type: 'nes'});
+    db.defaultGames.add({file: {name: 'bobli.nes'}, name: "bobli", save: null, defaultGame: true, type: 'nes'});
+    db.defaultGames.add({file: {name: 'twin_d.nes'}, name: "twin_d", save: null, defaultGame: true, type: 'nes'});
 
     //Default SNES games
-    db.defaultGames.add({file: {name: 'su_cook.sfc'}, name: "su_cook", save: 'saveState', defaultGame: true, type: 'snes'});
-    db.defaultGames.add({file: {name: 'su_boss.sfc'}, name: "su_boss", save: 'saveState', defaultGame: true, type: 'snes'});
-    db.defaultGames.add({file: {name: 'nek.sfc'}, name: "nek", save: 'saveState', defaultGame: true, type: 'snes'});
+    db.defaultGames.add({file: {name: 'su_cook.sfc'}, name: "su_cook", save: null, defaultGame: true, type: 'snes'});
+    db.defaultGames.add({file: {name: 'su_boss.sfc'}, name: "su_boss", save: null, defaultGame: true, type: 'snes'});
+    db.defaultGames.add({file: {name: 'nek.sfc'}, name: "nek", save: null, defaultGame: true, type: 'snes'});
 });

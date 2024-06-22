@@ -5,6 +5,9 @@ import { RomContext } from '../RomContext';
 import { useEffect, useContext, useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
+import { getGameObject } from '../utilities/dbtil'
+import Popup from '../components/Popup'
+
 
 import {db} from '../db'
  
@@ -17,39 +20,8 @@ const GamerManChild = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    const getParameters = () => {
-        let dg = searchParams.get('dg');
-        let g = searchParams.get('g');
-        if (dg)
-        {
-            return {key: 'dg', value: dg}
-        }
-        else if (g)
-        {
-            return {key: 'g', value: g}
-        }
-        return null;
-    }
-
-    const getGameObject = async (dbObj) => {
-        let myGame = null;
-        let dbParamObj = getParameters();
-        
-        let dbStoreName = dbParamObj?.key;
-        let dbGameId = Number(dbParamObj?.value);
-
-        console.log("These are the numbers: " + dbStoreName + "" + dbGameId)
-
-        if (dbStoreName = 'dg')
-        {
-            myGame = await db.defaultGames.get(dbGameId);
-        }
-        else if (dbStoreName = 'g')
-        {
-            myGame = await db.games.get(dbGameId);
-        }
-        console.log('This is the game ' + myGame)
-        return myGame;
+    const handleClick = () => {
+        setLoaded(!loaded);
     }
 
 
@@ -57,14 +29,16 @@ const GamerManChild = () => {
         const loadRom = async () => {
             if (!globalRom)
             {
+                setLoaded(true)
                 console.log("Before value of game rom: " + globalRom);
-                let temp = await getGameObject(db)
+                let temp = await getGameObject(db, searchParams)
                 setGlobalRom(temp);
+                console.log("After value of game temp: " + temp.file.name);
                 console.log("After value of game rom: " + globalRom);
             }
             if (globalRom)
             {
-                setLoaded(true);
+                setLoaded(false);
             }
         }
         loadRom();
@@ -76,7 +50,7 @@ const GamerManChild = () => {
         <div>
             
            {globalRom ? <NoSSR globalRom={globalRom}/> : <div>Gamer</div>}
-           
+           <Popup open={loaded} setOpen={setLoaded}/>
         </div>
     );
 };
