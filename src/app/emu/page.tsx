@@ -4,12 +4,13 @@ import dynamic from 'next/dynamic'
 import { RomContext } from '../RomContext';
 import { useEffect, useContext, useState, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
 import {db} from '../db'
  
 const NoSSR = dynamic(() => import('../components/nes'), { ssr: false })
 
-const GamerMan = () => {
+const GamerManChild = () => {
     const {globalRom, setGlobalRom} = useContext(RomContext);
     const [loaded, setLoaded] = useState(false);
     
@@ -79,5 +80,16 @@ const GamerMan = () => {
         </div>
     );
 };
+
+const GamerMan = () => {
+
+    return (
+    <div>
+        <Suspense>
+            <GamerManChild/>
+        </Suspense>
+    </div>
+    )
+}
 
 export default GamerMan;
