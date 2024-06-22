@@ -95,19 +95,56 @@ export default function Home() {
 const libraryGameStart = async (id) => {
   //console.log("Start the game!!!")
   const gameObj = await db.games.get(id);
+  console.log(gameObj.file)
   setGlobalRom(gameObj);
   router.push('/snes')
   
 }
 
+const libraryGameStartNES = async (event) => {
+  //console.log("Start the game!!!")
+  const gameFile = event.target.files[0];
+  console.log(gameFile)
+  const gameObj = {
+    id: 322,
+    file: gameFile,
+    name: 'TestNES',
+    save: 'saveFile'
+  }
+  setGlobalRom(gameObj);
+  router.push('/emu')
+  
+}
 
-  const startGame = async (rom) => {
-    if (!gameInLibrary(rom)) throw new Error("Game not found in library.")
-    const rom_string = rom + '.nes'
-    const romBuffer = await fetch(API_ENDPOINT + rom_string).then(res => res.arrayBuffer());
-    const romBuffer8t = new Uint8Array(romBuffer)
-    setGlobalRom(romBuffer8t);
-    router.push(`/emu`)
+
+  const startGame = async (rom, gameId, type) => {
+    let ext;
+    let myRoute;
+    let routeInfo;
+    if (type == 'snes')
+    {
+      ext = '.sfc'
+      myRoute = '/snes'
+    }
+    else if (type == 'nes')
+    {
+      ext = '.nes'
+      myRoute = '/emu'
+    }
+    const rom_string = rom + ext
+    const romBlob = await fetch(API_ENDPOINT + rom_string).then(res => res.blob());
+    const romFile = new File([romBlob], rom_string)
+    console.log(romFile)
+    
+    const dummyGameObj = {
+      id: gameId,
+      file: romFile,
+      name: 'dummyName',
+      save: 'dummyState',
+      defaultGame: true
+    }
+    setGlobalRom(dummyGameObj);
+    router.push(myRoute + `?dg=${gameId}`)
   }
 
   const gameInLibrary = (title) => {
@@ -139,7 +176,7 @@ const libraryGameStart = async (id) => {
     </Box>
     <Box component="section" sx={[classes.root_box]}>
       <Grid container spacing={0} sx={{display: "flex"}}>
-        <Card onClick={() => startGame('sp_gulls')} sx={{ flex: 1 }}>
+        <Card onClick={() => startGame('sp_gulls', 1, 'nes')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -156,7 +193,7 @@ const libraryGameStart = async (id) => {
     </Card>
         
     
-    <Card onClick={() => startGame('bobli')} sx={{ flex: 1 }}>
+    <Card onClick={() => startGame('bobli', 2, 'nes')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -173,7 +210,7 @@ const libraryGameStart = async (id) => {
     </Card>
     
         
-    <Card onClick={() => startGame('twin_d')} sx={{ flex: 1 }}>
+    <Card onClick={() => startGame('twin_d', 3, 'nes')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -199,7 +236,7 @@ const libraryGameStart = async (id) => {
 
     <Box component="section" sx={[classes.root_box]}>
       <Grid container spacing={0} sx={{display: "flex"}}>
-        <Card onClick={() => startGame('sp_gulls')} sx={{ flex: 1 }}>
+        <Card onClick={() => startGame('su_cook', 4, 'snes')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -209,14 +246,14 @@ const libraryGameStart = async (id) => {
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
-            Neko
+            Supercooked
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
         
     
-    <Card onClick={() => startGame('bobli')} sx={{ flex: 1 }}>
+    <Card onClick={() => startGame('su_boss', 5, 'snes')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -226,14 +263,14 @@ const libraryGameStart = async (id) => {
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
-            Nekotako
+            Super Boss
           </Typography>
         </CardContent>
       </CardActionArea>
     </Card>
     
         
-    <Card onClick={() => startGame('twin_d')} sx={{ flex: 1 }}>
+    <Card onClick={() => startGame('nek', 6, 'snes')} sx={{ flex: 1 }}>
       <CardActionArea>
         <CardMedia
           component="img"
@@ -243,7 +280,7 @@ const libraryGameStart = async (id) => {
         />
         <CardContent>
           <Typography gutterBottom variant="h6" component="div">
-            Twin Dragons
+            Nekotako
           </Typography>
       
         </CardContent>
@@ -320,7 +357,7 @@ const libraryGameStart = async (id) => {
   
 </Grid>
 </Container>
-    
+    <input type='file' onChange={libraryGameStartNES}/>
     </div>
   );
 }

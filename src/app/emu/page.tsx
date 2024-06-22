@@ -1,267 +1,83 @@
-"use client"
-import React, { useState, useEffect, useContext, Suspense } from 'react';
-import init, { WasmNes, Button } from "../../../public/nes_rust_wasm";
-import {default as B} from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
-//import { useSearchParams, usePathname  } from 'next/navigation';
+'use client'
+import React from 'react';
+import dynamic from 'next/dynamic'
 import { RomContext } from '../RomContext';
-import { AppBar } from '@mui/material';
-import Toolbar from '@mui/material/Toolbar';
-import FitScreenIcon from '@mui/icons-material/FitScreen';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import IconButton from '@mui/material/IconButton';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link'
-import ControlsModal from '../ControlsModal';
+import { useEffect, useContext, useState, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import {db} from '../db'
+ 
+const NoSSR = dynamic(() => import('../components/nes'), { ssr: false })
 
-//<B color='error' >Controls</B>
-const classes = {
-    full: {width: '100%', height: '100vh'},
-    default: {height: '100vh', width: 'auto'}
-}
-
-
-
-const Emulator = () => {
-    const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/';
-    //const pathname = usePathname()
-    const styleWidth = 256 * 4;
-    const styleHeight = 256 * 4
-
-    const [screen, setScreen] = useState('default')
-    //Get Global Rom
+const GamerMan = () => {
     const {globalRom, setGlobalRom} = useContext(RomContext);
+    const [loaded, setLoaded] = useState(false);
+    
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
-    let audio_source;
-    let animation;
+    const getParameters = () => {
+        let dg = searchParams.get('dg');
+        let g = searchParams.get('g');
+        if (dg)
+        {
+            return {key: 'dg', value: dg}
+        }
+        else if (g)
+        {
+            return {key: 'g', value: g}
+        }
+        return null;
+    }
 
-    //Get Chosen game
-    /*const searchParams = useSearchParams();
-    const game_title = searchParams.get('game');
-    const my_file = searchParams.get('file')*/
+    const getGameObject = async (dbObj) => {
+        let myGame = null;
+        let dbParamObj = getParameters();
+        
+        let dbStoreName = dbParamObj?.key;
+        let dbGameId = Number(dbParamObj?.value);
 
-    const [show, setShow] = useState(true);
-   
+        console.log("These are the numbers: " + dbStoreName + "" + dbGameId)
+
+        if (dbStoreName = 'dg')
+        {
+            myGame = await db.defaultGames.get(dbGameId);
+        }
+        else if (dbStoreName = 'g')
+        {
+            myGame = await db.games.get(dbGameId);
+        }
+        console.log('This is the game ' + myGame)
+        return myGame;
+    }
 
 
     useEffect(() => {
-        if (globalRom)
-        {
-            //console.log("Global Rom Exists")
-            handleUpload(globalRom);
-        }
-        
-        /*if (rom)
-        {
-        start(rom)
-        };*/
-        //const url = `${pathname}?${searchParams}`
-        //console.log("Effect")
-        return () => {
-            if (audio_source)
+        const loadRom = async () => {
+            if (!globalRom)
             {
-                audio_source.close();cancelAnimationFrame(animation)
+                console.log("Before value of game rom: " + globalRom);
+                let temp = await getGameObject(db)
+                setGlobalRom(temp);
+                console.log("After value of game rom: " + globalRom);
+            }
+            if (globalRom)
+            {
+                setLoaded(true);
             }
         }
-      }, []);
-
-      const handleUpload = (rom) => {
-        init()
-          .then(wasm => run(wasm, rom))
-          .catch(error => console.error(error));
-      }
-
-      const changeScreen = () => {
-        if (screen === 'default')
-        {
-            setScreen('full')
-        }
-        else 
-        {
-            setScreen('default')
-        }
-      }
-
-
-    /*const handleUpload = (event) => {
-        console.log(event.target.files[0]);
-        const reader = new FileReader();
-        reader.onload = () => {
-            const rom_data = reader.result;
-            init()
-          .then(wasm => run(wasm, new Uint8Array(rom_data)))
-          .catch(error => console.error(error));
-        }
-        reader.readAsArrayBuffer(event.target.files[0]);
+        loadRom();
         
-    }*/
-    
+    }, [])
 
-
-    const run = (wasm, romContentArray) => {
-        const height = 240
-        const width = 256; 
-        const canvas = document.getElementById('nesCanvas');
-        const ctx = canvas.getContext('2d');
-        const imageData = ctx.createImageData(width, height);
-        const pixels = new Uint8Array(imageData.data.buffer);
-        const nes = WasmNes.new();
-        nes.set_rom(romContentArray);
-
-        const setupAudio = (wasm, nes) => {
-            const audioContext = AudioContext || webkitAudioContext;
-    
-            if (audioContext === undefined) {
-              throw new Error('This browser seems not to support AudioContext.');
-            }
-    
-            const bufferLength = 4096;
-            const context = new audioContext({sampleRate: 44100});
-            audio_source = context;
-            const scriptProcessor = context.createScriptProcessor(bufferLength, 0, 1);
-    
-            scriptProcessor.onaudioprocess = e => {
-              const data = e.outputBuffer.getChannelData(0);
-              nes.update_sample_buffer(data);
-              // Adjust volume
-              for (let i = 0; i < data.length; i++) {
-                data[i] *= 0.25;
-              }
-            };
-    
-            scriptProcessor.connect(context.destination);
-          };
-
-        const stepFrame = () => {
-            animation = requestAnimationFrame(stepFrame);
-            // Run emulator until screen is refreshed
-            nes.step_frame();
-            // Load screen pixels and render to canvas
-            nes.update_pixels(pixels);
-            ctx.putImageData(imageData, 0, 0);
-          };
-
-          const getButton = keyCode => {
-            switch (keyCode) {
-              case 32: // space
-                return Button.Start;
-              case 37: // Left
-                return Button.Joypad1Left;
-              case 38: // Up
-                return Button.Joypad1Up;
-              case 39: // Right
-                return Button.Joypad1Right;
-              case 40: // Down
-                return Button.Joypad1Down;
-              case 50: // 2
-                return Button.Joypad2Down;
-              case 52: // 4
-                return Button.Joypad2Left;
-              case 54: // 6
-                return Button.Joypad2Right;
-              case 56: // 8
-                return Button.Joypad2Up;
-              case 65: // A
-                return Button.Joypad1A;
-              case 66: // B
-                return Button.Joypad1B;
-              case 82: // R
-                return Button.Reset;
-              case 83: // S
-                return Button.Select;
-              case 88: // X
-                return Button.Joypad2A;
-              case 90: // Z
-                return Button.Joypad2B;
-              default:
-                return null; 
-            }
-          };
-
-          window.addEventListener('keydown', event => {
-            const button = getButton(event.keyCode);
-            if (button === null) {
-              return;
-            }
-            nes.press_button(button);
-            event.preventDefault();
-          }, false);
-  
-          window.addEventListener('keyup', event => {
-            const button = getButton(event.keyCode);
-            if (button === null) {
-              return;
-            }
-            nes.release_button(button);
-            event.preventDefault();
-          }, false);
-
-          
-        setupAudio(wasm, nes);
-        nes.bootup();
-        stepFrame();
-    }
-    
-
-    const start = async (rom) => {
-        setShow(false);
-        const rom_string = rom + '.nes'
-        const romBuffer = await fetch(API_ENDPOINT + rom_string).then(res => res.arrayBuffer());
-        //const romBuffer = await fetch(temp_link).then(res => res.arrayBuffer());
-        //const input = import.meta.url.replace(/\.js$/, '_bg.wasm');
-
-        //prod
-        //const romBuffer = await fetch("mario.nes").then(res => res.arrayBuffer());
-        //const romBuffer = rom.arrayBuffer();
-        init()
-          .then(wasm => run(wasm, new Uint8Array(romBuffer)))
-          .catch(error => console.error(error));
-    }
-
-    
-
-    
 
     return (
-        <div style={classes[screen]} onMouseMove={() => {console.log("Gamer moment")}}>
-            <canvas id="nesCanvas" width='256' height='240' style={classes[screen]}></canvas>
-       
-            <AppBar position='absolute' sx={{bgcolor: 'black'}}>
-                <Toolbar variant='regular'>
-
-                    <Link href="/select">
-                <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <ArrowBackIcon/>
-          </IconButton>
-          </Link>
-
-          
-          <ControlsModal></ControlsModal>
-          <IconButton
-            size="large"
-            edge="end"
-            color="inherit"
-            aria-label="menu"
-            onClick={changeScreen}
-          >
-            <FitScreenIcon/>
-          </IconButton >
-
-          
-
-                </Toolbar>
-            </AppBar>
+        <div>
+            
+           {globalRom ? <NoSSR globalRom={globalRom}/> : <div>Gamer</div>}
+           
         </div>
-        
     );
 };
 
-export default Emulator
+export default GamerMan;

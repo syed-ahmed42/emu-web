@@ -62,12 +62,6 @@ export default function ControlsModal() {
                 <KeyBoardIcons iconName={`keyboard_return`} fontSize={fontSize}/>
                 <KeyBoardIcons iconName={`keyboard_shift`} fontSize={fontSize}/>
             </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              Start - Space
-            </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              Select - Enter
-            </Typography>
           </Box>
         </Fade>
       </Modal>
