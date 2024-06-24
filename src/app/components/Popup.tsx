@@ -19,14 +19,7 @@ const style = {
 };
 
 export default function TransitionsModal({open, setOpen}) {
-  const handleOpen = () => setOpen(true);
   const handleClose = (event, reason) => {
-    if(reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
-        // Set 'open' to false, however you would do that with your particular code.
-        setOpen(false);
-    }
-  }
-  const handleClick = () => {
     setOpen(false);
   }
 
@@ -47,10 +40,10 @@ export default function TransitionsModal({open, setOpen}) {
         }}
       >
         <Fade in={open}>
-          <Box sx={[style, {display: 'flex', alignItems: 'center', justifyContent: 'center'}]}>
-            <Button variant='outlined' onClick={handleClick}>
-              Launch
-            </Button>
+          <Box sx={[style, {display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '10px'}]}>
+          <Typography id="modal-modal-description">
+      Tap anywhere on the screen to continue
+          </Typography>
           </Box>
         </Fade>
       </Modal>

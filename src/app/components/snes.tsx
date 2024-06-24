@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation'  // Usage: App router
 import ControlBar from './ControlBar';
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
+import { OverlayContext } from '../OverlayContext';
 
 import {db} from '../db'
 
@@ -39,13 +40,14 @@ function timeout(delay: number) {
 
 
 
-export default function Regular ({globalRom}) {
+export default function Regular () {
     const API_ENDPOINT = process.env.LOCAL_API_ENDPOINT || '/'
 
     //const router = useRouter();
 
     //let {globalRom, setGlobalRom} = useContext(RomContext);
     const [globalRomState, setGlobalRomState] = useState(null);
+    const globalRom = useContext(OverlayContext)
     const [showBar, setShowBar] = useState(false);
     const gamerman = useRef(null);
     //const [wait, setWait] = useState(false);
