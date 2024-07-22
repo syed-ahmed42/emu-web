@@ -8,7 +8,7 @@ import { Suspense } from 'react'
 import { getGameObject } from '../utilities/dbtil'
 import Popup from '../components/Popup'
 import { OverlayContext } from '../OverlayContext';
-
+import StateNotification from './StateNotification';
 
 import {db} from '../db'
 
@@ -46,10 +46,11 @@ const EmuOverlayChild = ({children}) => {
 
 
     return (
-        <div>
+        <div style={{width: '100%', height: '100%'}}>
             <OverlayContext.Provider value={globalRom}>
                 {globalRom ? children : <div>Gamer</div>}
                 <Popup open={loaded} setOpen={setLoaded}/>
+                
            </OverlayContext.Provider>
         </div>
     );
@@ -58,7 +59,7 @@ const EmuOverlayChild = ({children}) => {
 const EmuOverlay = ({children}) => {
 
     return (
-    <div>
+    <div style={{position: 'absolute', width: '100%', height: '100%'}}>
         <Suspense>
             <EmuOverlayChild>
                 {children}

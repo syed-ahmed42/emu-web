@@ -12,7 +12,7 @@ import ControlsModal from '../ControlsModal';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import SvgIcon from '@mui/material/SvgIcon';
-import { Icon } from '@mui/material';
+import { Icon, Box } from '@mui/material';
 import KeyBoardIcons from './KeyBoardIcons';
 import { useRouter } from 'next/navigation'  // Usage: App router
 import ControlBar from './ControlBar';
@@ -28,8 +28,8 @@ let state;
 let isDefault = false;
 
 const classes = {
-    full: {width: '100%', height: '100vh'},
-    default: {height: '100vh', width: 'auto'}
+    full: {width: '100%', height: 'auto'},
+    default: {height: 'auto', width: '75%'}
 }
 
 
@@ -49,38 +49,17 @@ export default function Nes () {
     //let {globalRom, setGlobalRom} = useContext(RomContext);
     const globalRom = useContext(OverlayContext)
     const [globalRomState, setGlobalRomState] = useState(null);
-    const [showBar, setShowBar] = useState(false);
+    const [showBar, setShowBar] = useState(true);
+    const [screenStyle, setScreenStyle] = useState('default');
     const gamerman = useRef(null);
     //const [wait, setWait] = useState(false);
     const searchParams = useSearchParams()
 
     let wait = false;
     let timer;
-    const handleBar = async () => {
-            if (!wait)
-            {
-            console.log('Mouse movemnt');
-            wait = true;
-            if (!showBar)
-            {
-                setShowBar(true);
-            }
-            
-                console.log("Clear Timeout");
-                clearTimeout(gamerman.current);
-            
-            
-            setTimeout(function() {
-                wait = false;
-            }, 1000)
-            gamerman.current = setTimeout(function() {
-                console.log('Should not run on move')
-                setShowBar(false);
-            }, 7500)
-            
-
-        }
-        
+    
+    const handleClick = () => {
+        setShowBar(false);
     }
 
 
@@ -156,6 +135,22 @@ export default function Nes () {
         console.log('This is the game ' + myGame)
         return myGame;
     }
+
+    const handleFullscreen = () => {
+        if (game)
+        {
+            console.log("Fullscreen pressed")
+            //game.sendCommand('MENU_TOGGLE');
+            if (screenStyle === 'default')
+            {
+                setScreenStyle('full');
+            }
+            else
+            {
+                setScreenStyle('default');
+            }
+        }
+    }
     
 
 
@@ -188,7 +183,7 @@ export default function Nes () {
             {
                 setGlobalRomState(globalRom)
                 console.log("This is global rom: " +  globalRom.id);
-                setShowBar(true)
+                //setShowBar(true)
                 
             async function gamer() {game = await Nostalgist.nes(globalRom.file.name)
             }
@@ -213,7 +208,7 @@ export default function Nes () {
         return () => {
             if (game)
             {
-                setShowBar(false);
+                //setShowBar(false);
                 state = null;
                 game.exit();
                 game = null;
@@ -228,14 +223,17 @@ export default function Nes () {
 
 
     return (
-        <>
-        <div /*onMouseMove={handleBar}*/>
+        <div style={{width: '100%', height: '100%'}}>
+        <ControlBar checked={showBar} setChecked={setShowBar} handleSave={handleSave} handleLoad={handleLoad} globalRom={globalRomState} handleFullscreen={handleFullscreen}/>
+        <div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}/*onMouseMove={handleBar}*/>
+            <div onClick={handleClick} style={{position: 'absolute', top: '150px', bottom: 0, left: 0, right: 0}}>
+            </div>
+        
+            <canvas id="snesCanvas" style={classes[screenStyle]}></canvas>
             
-            <canvas id="snesCanvas" width='256' height='240' style={classes['default']}></canvas>
             
-            <ControlBar handleSave={handleSave} handleLoad={handleLoad} globalRom={globalRomState} />
 
         </div>
-        </>
+        </div>
     );
 };

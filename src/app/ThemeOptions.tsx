@@ -10,13 +10,23 @@ export const themeOptions: ThemeOptions = {
       main: '#a320bf',
     },
     background: {
-        default: 'black'
+        default: '#000'
     },
   },
   typography: {
     allVariants: {
       color: "white"
     },
+  },
+  components: {
+    MuiSnackbarContent: {
+        styleOverrides: {
+            root: {
+                backgroundColor: 'black',
+                color: 'white'
+            }
+        }
+    }
   }
 };
 

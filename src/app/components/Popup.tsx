@@ -22,6 +22,9 @@ export default function TransitionsModal({open, setOpen}) {
   const handleClose = (event, reason) => {
     setOpen(false);
   }
+  const handleClick = () => {
+    setOpen(false);
+  }
 
   return (
     <div>
@@ -32,15 +35,15 @@ export default function TransitionsModal({open, setOpen}) {
         onClose={handleClose}
         disableAutoFocus={true}
         closeAfterTransition
-        slots={{ backdrop: Backdrop }}
+        slots={{ backdrop: Backdrop}}
         slotProps={{
           backdrop: {
             timeout: 500,
           },
         }}
       >
-        <Fade in={open}>
-          <Box sx={[style, {display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '10px'}]}>
+        <Fade in={open} style={{ transitionDelay: open ? '250ms' : '0ms' }}>
+          <Box onClick={handleClick} sx={[style, {display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '10px'}]}>
           <Typography id="modal-modal-description">
       Tap anywhere on the screen to continue
           </Typography>
