@@ -58,13 +58,14 @@ export default function Emulator ({mode}) {
     //const router = useRouter();
 
     //let {globalRom, setGlobalRom} = useContext(RomContext);
-    const globalRom = useContext(OverlayContext);
-
+    let globalRom = null;
     const emu_code = getEmu(mode);
     const [consoleCode, setConsoleCode] = useState(emu_code);
 
 
     const [globalRomState, setGlobalRomState] = useState(null);
+    
+    
     const [showBar, setShowBar] = useState(true);
     const [screenStyle, setScreenStyle] = useState('default');
     const gamerman = useRef(null);
@@ -140,11 +141,11 @@ export default function Emulator ({mode}) {
 
         console.log("These are the numbers: " + dbStoreName + "" + dbGameId)
 
-        if (dbStoreName = 'dg')
+        if (dbStoreName === 'dg')
         {
             myGame = await db.defaultGames.get(dbGameId);
         }
-        else if (dbStoreName = 'g')
+        else if (dbStoreName === 'g')
         {
             myGame = await db.games.get(dbGameId);
         }
@@ -186,6 +187,7 @@ export default function Emulator ({mode}) {
       })
 
     useEffect(() => {
+        
 
         const loadAndStart = async () => {
             /*if (!globalRom)
@@ -195,6 +197,12 @@ export default function Emulator ({mode}) {
                 console.log("After value of game rom: " + globalRom)
             }*/
             console.log("This is child global: " + globalRom);
+            if (!globalRom)
+            {
+            const tempRomLoc = await getGameObject(db);
+            globalRom = tempRomLoc;
+            console.log("This is the temp rom: " + globalRom.name)
+            }
             if (globalRom)
             {
                 setGlobalRomState(globalRom)

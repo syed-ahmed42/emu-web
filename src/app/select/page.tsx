@@ -106,12 +106,10 @@ export default function Home() {
   }
 }
 
-const libraryGameStart = async (id) => {
+const libraryGameStart = async (id, type) => {
   //console.log("Start the game!!!")
-  const gameObj = await db.games.get(id);
-  let route = (gameObj.type.localeCompare('nes')) ? '/emu' : '/snes'
-  route += `?g=${gameObj.id}`
-  setGlobalRom(gameObj);
+  let route = (type.localeCompare('nes')) ? '/emu' : '/snes'
+  route += `?g=${id}`
   router.push(route);
   
 }
@@ -325,7 +323,7 @@ const libraryGameStartNES = async (event) => {
           >
             <CloseIcon/>
           </IconButton>
-        <CardActionArea onClick={() => libraryGameStart(myGame.id)}>
+        <CardActionArea onClick={() => libraryGameStart(myGame.id, myGame.type)}>
          
           <CardMedia
         sx={{ height: 140 }}
